@@ -1,0 +1,53 @@
+{
+  "id": "adressForm",
+  "title": "Address From",
+  "entity": {
+    "id": "Address",
+    "entity": {
+      "name": {
+        "defaultName": "Name",
+        "type": "String"
+      },
+      "phone": {
+        "defaultName": "Phone",
+        "type": "String"
+      },
+      "city": {
+        "defaultName": "City",
+        "type": {
+          "name": {
+            "defaultName": "Name",
+            "type": "String"
+          },
+          "phone": {
+            "defaultName": "Postal",
+            "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "vars": {
+    "id": {
+      "type": "number",
+      "optional": true
+    },
+    "openable": {
+      "type": "boolean",
+      "default": "false"
+    },
+    "noName": {
+      "type": "boolean",
+      "default": "true"
+    },
+    "normalized": {
+      "type": "boolean",
+      "default": "true"
+    }
+  },
+  "actions": [
+    "function () {\n    return console.log(\"Save something\");\n  }",
+    "function () {\n    return console.log(\"Cancel\");\n  }",
+    "function () {\n    return console.log(\"Delete something\");\n  }"
+  ]
+}
