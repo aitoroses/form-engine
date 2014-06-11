@@ -1,0 +1,23 @@
+{
+  "name": "form-engine",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aitoroses/form-engine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aitoroses/form-engine/issues"
+  },
+  "homepage": "https://github.com/aitoroses/form-engine",
+  "dependencies": {
+    "express": "^4.4.2"
+  }
+}
