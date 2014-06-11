@@ -34,10 +34,11 @@ processFormVars = (vars) ->
 processEntityAttributes = (attrs) ->
 	iterateOverObjectString attrs, (arg, index) ->
 		# Name
+		original = arg
 		arg = arg.split(' ')
 		switch index
 			# Default name
-			when 0 then this.defaultName = arg[0]
+			when 0 then this.defaultName = original
 			# Type
 			when 1
 				switch arg[0].toLowerCase()
@@ -48,7 +49,8 @@ processEntityAttributes = (attrs) ->
 						# Check existance
 						if not this.type? then this.type = "N/A"
 		
-					else this.type = arg[0]
+					else this.type = arg[0].toLowerCase()
+		if arg[0].match('optional') then this.optional = true
 
 lookupEntity = (entityName) ->
 	for k, entity of _entities 
