@@ -89,6 +89,10 @@ parse = (tokens) ->
 	types = ['entity', 'form', 'listener', 'action']
 	token = -> tokens[i]
 	val = -> token().value
+	nextVal = (num) -> (tokens[i + num]).value
+	isNext = (num, tokenVal) -> (tokens[i + num]).value is tokenVal
+	move = (num) -> i += num; return token()
+	expect = (num, expectation) -> if (tokens[i + num]).value isnt expectation then "Expected #{expectation} but #{(tokens[i + num]).value} was found." else true
 	advance = -> ++i; token()
 
 	# Parse entity
@@ -146,37 +150,43 @@ parse = (tokens) ->
 				layout = []
 				layoutTypes = ['vertical', 'horizontal']
 				parseLayout = () ->
-					layouts = []
-					type = val()
-					# if layouts.indexOf() == -1 then throw "Invalid type of layout."
-					# group = {type: layoutType, def: []}
-					if advance().value isnt '{' then throw "expected { in layout definition."
-					advance()
-					while true
-						# Isn't another layout?
-						if layoutTypes.indexOf(val()) == -1
-							# Fields
-							layouts.push (->
-								fields = []
-								while val() isnt '}'
-									c = val()
-									while advance().value isnt ';' then c += ' ' + val()
-									fields.push c
-									break if advance().value is '}'
-								if val() isnt '}' then throw "expected } in layout definition."
-								return new LayoutNode(type, fields)
-							)()
-						else (->
-							# child layout
-							layouts.push parseLayout()
-						)()
-						break if advance().value is '}'
-						
+					# check if it's layout
+					debugger
+					isBody = -> nextVal(1) isnt '}' and !isLayout()
+					isLayout = -> expect(1, '{') and layoutTypes.indexOf(val()) != -1
+					parseBody = ->
+						# parse the fields in an array
+						debugger
+						fields = []
+						loop
+							field = ""
+							loop
+								field += ' ' + val()
+								break if isNext(1, ';')
+								move(1)
+							# Move to the next field or to the end of the body
+							move(2)
+							fields.push field.trim()
+							break if val() == '}'
+						move(1)
+						# position in '}' body end
+						return fields
 
-					return new LayoutNode(type, layouts)
+					nodes = []
+					type = val()
+					expect(1, '{')
+					move(2)
+					# Now that we are inside
+					loop
+						if isLayout() then nodes.push parseLayout()
+						else if isBody() then nodes.push parseBody()
+						else break # at this point we should be on '}'
+					#move(1)
+					return new LayoutNode(type, nodes)
 
 				class LayoutNode
 					constructor: (@type, @def) ->
+
 				if advance().value isnt '{' then throw "expected { in layout definition."
 
 				advance()					
