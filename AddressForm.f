@@ -40,10 +40,11 @@ form Address From {
 			Address Details;
 		}
 		horizontal {
-			
-			Observations;
-			Phone;
-			City;
+			vertical {
+				Observations;
+				Phone;
+				City;
+			}
 		}
 	}
 

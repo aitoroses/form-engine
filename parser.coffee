@@ -193,20 +193,27 @@ parse = (tokens) ->
 							keys.pop()
 						
 						while keys.length != 0
+							currentNode = getCurrentNode()
 
 							if nextVal(1) is '{'
 								k++
 								setCurrentNode(createContext())
 								keys.push '{'
 								move(2)
+								if keys.length > 2 
+									list.pop()
+									move(-2)
+									currentNode.add parseNode()
 
 							else
 								# There are fields
 								move(-2) 
 								if hasFields()
 									getFields().forEach (field) ->
-										getCurrentNode().add(field)
+										currentNode.add(field)
 								finishBlock()
+						finishBlock()	
+						debugger	
 						return list
 						
 
