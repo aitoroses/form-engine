@@ -26,26 +26,24 @@ entity Address {
 }
 
 form Address From {
+
 	entity Address;
 
 	layout {
-		vertical {
-			horizontal {
-				Name;
-				Street name;
-				Between Street;
-				Street number;
-				Building floor;
-				Building room;
-				Address Details;
-			}
-			horizontal {
-				vertical {
-					Observations;
-					Phone;
-					City;
-				}
-			}
+		horizontal {
+			Name;
+			Street name;
+			Between Street;
+			Street number;
+			Building floor;
+			Building room;
+			Address Details;
+		}
+		horizontal {
+			
+			Observations;
+			Phone;
+			City;
 		}
 	}
 
