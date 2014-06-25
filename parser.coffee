@@ -212,55 +212,14 @@ parse = (tokens) ->
 									getFields().forEach (field) ->
 										currentNode.add(field)
 								finishBlock()
-						finishBlock()	
-						debugger	
+						finishBlock()		
 						return list
-						
 
-					parseNode()
-
-
-					# getLayout = () ->
-					# 	j = 0
-					# 	balance = 0
-					# 	started = false
-					# 	layouts = [] # index-type pairs
-					# 	while not (balance is 0 and started)
-					# 		if nextVal(j) is '{' then balance++
-					# 		else if nextVal(j) is '}'
-					# 			started = true
-					# 			balance--
-					# 		else if layoutTypes.indexOf(nextVal(j)) isnt -1
-					# 			layouts.push
-					# 				fields: getFields(j)
-					# 				token: j
-					# 				type: nextVal(j)
-					# 		j++
-
-					# 	debugger
-					# 	# # Nest them
-					# 	# for k in [layouts.length-1...0]
-					# 	# 	j = layouts[k].token
-					# 	# 	if layoutTypes.indexOf(nextVal(j-2)) isnt -1
-					# 	# 		parent = layouts[k-1]
-					# 	# 		if not parent.childs? then parent.childs = []
-					# 	# 		parent.childs.push(layouts[k])
-					# 	# 		layouts.pop(layouts[k])
-					# 	# 	else
-
-					# 	# 	k = layouts.length-1
-						
-
-					# 	return layouts
-
-					
-					
-
-					debugger
-
+					return parseNode()
 
 				advance()
 				form.layout = parseLayout()
+				debugger
 
 			'else': ->
 				# attr name
