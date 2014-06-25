@@ -149,49 +149,154 @@ parse = (tokens) ->
 			'layout': ->
 				layout = []
 				layoutTypes = ['vertical', 'horizontal']
-				parseLayout = () ->
-					# check if it's layout
-					debugger
-					isBody = -> nextVal(1) isnt '}' and !isLayout()
-					isLayout = -> expect(1, '{') and layoutTypes.indexOf(val()) != -1
-					parseBody = ->
-						# parse the fields in an array
-						debugger
-						fields = []
-						loop
-							field = ""
-							loop
-								field += ' ' + val()
-								break if isNext(1, ';')
-								move(1)
-							# Move to the next field or to the end of the body
-							move(2)
-							fields.push field.trim()
-							break if val() == '}'
-						move(1)
-						# position in '}' body end
-						return fields
-
-					nodes = []
-					type = val()
-					expect(1, '{')
-					move(2)
-					# Now that we are inside
-					loop
-						if isLayout() then nodes.push parseLayout()
-						else if isBody() then nodes.push parseBody()
-						else break # at this point we should be on '}'
-					#move(1)
-					return new LayoutNode(type, nodes)
-
-				class LayoutNode
-					constructor: (@type, @def) ->
-
+				isLayout = (layout) -> if layoutTypes.indexOf(layout) != -1 then return true else false
 				if advance().value isnt '{' then throw "expected { in layout definition."
 
-				advance()					
-				form.layout = new LayoutNode(val(), parseLayout())
-				debugger
+				
+				# # Data Structures
+				# class LayoutContainer extends Array
+				# 	constructor: (@type) ->
+				# 	addLayout: (layout) -> this.push layout
+				# class Layout
+				# 	constructor: (@type, @fields, @container = new LayoutContainer()) ->
+				# 	getContainer: -> this.container
+				# 	setFields: (fields) -> this.fields
+				# # parse code
+				# parent = new Layout('layout')
+				# layouts = [parent]
+				# lastLayout = -> return if layouts.length > 0 then layouts[layouts.length - 1] else null
+				# parseLayout = ->
+				# 	preprocess = ->
+				# 		# Analize the structure levels
+				# 		j = 0
+				# 		k = 0
+				# 		getVal = () -> nextVal(j + k)
+				# 		resetJ = -> j = 0
+				# 		resetK = -> k = 0
+				# 		# Get the max level structure
+				# 		maxLevels = (->
+				# 			levels = 0
+				# 			open = 0
+				# 			close = 0
+				# 			while open - close > 0 or open is 0
+				# 				if getVal() is '{' then open++;
+				# 				if getVal() is '}' then close++;
+				# 				levels = Math.max(levels, open - close)
+				# 				j++
+				# 			return levels
+				# 		)()
+				# 		resetJ()
+				# 		basicStructure = (->
+				# 			levels = (0 for level in [0...maxLevels])
+				# 			(-> 
+				# 				checkLevel = ->
+				# 					open = 0
+				# 					close = 0
+				# 					getLevel = () -> open-close
+				# 					while getLevel() < level
+				# 						if getVal() is '{' then open++;
+				# 						j++
+				# 					openTokens = 0
+				# 					closedOnce = 
+				# 					childs = 0
+				# 					while openTokens > 0 or not closedOnce
+				# 						if getVal() is '{'
+				# 							openTokens++
+				# 							# only in the first level
+				# 							if openTokens is 1 then childs++
+				# 						if getVal() is '}' 
+				# 							openTokens--
+				# 							closedOnce = true
+				# 						k++
+				# 					# Now that we are positioned at the start of the level
+				# 					resetK()
+				# 					return childs
+				# 				childCount = checkLevel()
+				# 				return childCount
+				# 			)() for num, level in levels
+				# 			return levels
+				# 		)()
+
+				# 		debugger
+				# 		return
+				# 	a = preprocess()
+				# 	loop
+				# 		# At the start of the loop, we should have the type
+				# 		type = val()
+				# 		# advance to body
+				# 		advance()
+				# 		if val() is '{'
+				# 			parentLayout = lastLayout()
+				# 			# create a new Layout object
+				# 			newLayout = new Layout(type)
+				# 			# store a reference
+				# 			layouts.push newLayout
+				# 			# add to parent
+				# 			parentLayout.getContainer().addLayout newLayout
+				# 			# keep parsing
+				# 			advance()
+				# 			if isLayout(type) then parseLayout()
+				# 		else
+				# 			fields = []
+				# 			move(-1)
+				# 			while val() isnt '}'
+				# 				# parse the body
+				# 				field = ""
+				# 				while val() isnt ';'
+				# 					field += ' ' + val()
+				# 					advance()
+				# 				fields.push field.trim()
+				# 				advance()
+				# 			lastLayout().setFields(fields)
+				# 			advance()
+				# 		if val() is '}'
+				# 			layouts.pop()
+				# 			break
+				# 	return parent
+
+				parseLayout = () ->
+					maxLevel = 0
+					getTokens = ->
+						layoutTokens = []
+						level = 0
+						closedOnce = false
+						while level > 0 or not closedOnce
+							if val() is '{' then level++
+							if val() is '}' then closedOnce = true; level--
+							layoutTokens.push advance()
+							maxLevel = Math.max(level, maxLevel)
+						layoutTokens
+					layoutTokens = getTokens()
+					spliceLevel = (targetLevel) ->
+						j = 0
+						getVal = -> layoutTokens[j].value
+						level = 0
+						start = 0
+						end = 0
+						while level isnt targetLevel
+							if getVal() is '{' then level++
+							if getVal() is '}' then level--
+							j++
+						# save the start token
+						start = j-2
+						# finish token
+						while not (level is targetLevel and getVal() is '}')
+							if getVal() is '{' then level++
+							if getVal() is '}' then level--
+							j++
+						# save the finish token
+						end = j
+
+						# splice the tokens
+						levelTokens = layoutTokens.splice(start, end - start + 1)
+						debugger
+						layoutTokens.splice(start, 0, levelTokens)
+
+					spliceLevel(3)
+					debugger
+
+				advance()			
+				form.layout = parseLayout()
 
 			'else': ->
 				# attr name
