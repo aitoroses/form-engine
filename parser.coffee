@@ -212,14 +212,21 @@ parse = (tokens) ->
 									getFields().forEach (field) ->
 										currentNode.add(field)
 								finishBlock()
-						finishBlock()		
-						return list
+						finishBlock()
+						# Transform the Context object
+						list1 = list.map (context) ->
+							# For each context
+							result = {}
+							result[context.layout] = context.map (x) -> x
+							return result
+						debugger
+						return list1
 
 					return parseNode()
 
 				advance()
 				form.layout = parseLayout()
-				debugger
+				advance()
 
 			'else': ->
 				# attr name
