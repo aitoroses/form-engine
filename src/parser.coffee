@@ -302,4 +302,4 @@ lang.parse = (tokens) ->
 
 lang.compile = (input) -> return lang.parse lang.lex(input)
 
-module.exports = lang
+module.exports = lang.compile
