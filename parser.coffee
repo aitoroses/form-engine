@@ -1,7 +1,6 @@
-fs = require 'fs'
-input = fs.readFileSync('./AddressForm.f').toString()
+lang = exports
 
-lex = (input) ->
+lang.lex = (input) ->
 	tokens = []
 	i = 0
 	c = null
@@ -84,7 +83,7 @@ isOpenbrace = (c) -> /[{]/.test(c)
 isClosingbrace = (c) -> /[}]/.test(c)
 
 
-parse = (tokens) ->
+lang.parse = (tokens) ->
 	i = 0
 	types = ['entity', 'form', 'listener', 'action']
 	token = -> tokens[i]
@@ -301,8 +300,4 @@ parse = (tokens) ->
 	}
 
 
-
-# output
-lexems = lex(input); #console.log(lexems)
-parseTree = parse(lexems); #console.log(parseTree)
-console.log JSON.stringify(parseTree, null, '   ')
+lang.compile = (input) -> return lang.parse lang.lex(input)
