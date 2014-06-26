@@ -1,7 +1,7 @@
 compile = require('./parser').compile
 
 fs = require 'fs'
-input = fs.readFileSync('./AddressForm.f').toString()
+input = fs.readFileSync('./AddressFrom.fl').toString()
 
 # output
 compiled = compile(input)

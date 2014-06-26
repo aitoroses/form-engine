@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<script src="F-lang.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<script>
+		$.get('AddressFrom.fl', function(res) {
+			var pre = document.createElement('pre');
+			pre.innerText = JSON.stringify(Flang(res), null, '    ');
+			document.body.appendChild(pre)
+		});
+		</script>
+	</body>
+</html>
